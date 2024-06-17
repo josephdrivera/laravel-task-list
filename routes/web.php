@@ -17,14 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', function () {
     return redirect()->route('tasks.index');
-}); // redirect to the index page
-
+});
 Route::get('/tasks', function () {
     return view('index', [
         'tasks' => Task::latest()->get()
-    ]); // return the tasks in the latest order
+    ]);
 })->name('tasks.index');
-
 Route::view('/tasks/create', 'create')
     ->name('tasks.create');
 
@@ -39,40 +37,47 @@ Route::get('/tasks/{id}', function ($id) {
         'task' => Task::findOrFail($id)
     ]);
 })->name('tasks.show');
-
-//
 Route::post('/tasks', function (Request $request) {
     $data = $request->validate([
         'title' => 'required|max:255',
         'description' => 'required',
         'long_description' => 'required'
     ]);
-
     $task = new Task;
+    $task->title = $data['title'];
+    $task->description = $data['description'];
+    $task->long_description = $data['long_description'];
+    $task->save();
+    return redirect()->route('tasks.show', ['id' => $task->id])
+        ->with('success', 'Task created successfully!');
+})->name('tasks.store');
+
+Route::put('/tasks/{id}', function ($id, Request $request) {
+    $data = $request->validate([
+        'title' => 'required|max:255',
+        'description' => 'required',
+        'long_description' => 'required'
+    ]);
+
+    $task = Task::findOrFail($id);
     $task->title = $data['title'];
     $task->description = $data['description'];
     $task->long_description = $data['long_description'];
     $task->save();
 
     return redirect()->route('tasks.show', ['id' => $task->id])
-        ->with('success', 'Task created successfully!'); // redirect to the show page with a success message
-})->name('tasks.store'); // name the route
+        ->with('success', 'Task updated successfully!');
+})->name('tasks.update');
 
-Route::put('/tasks/{id}', function ($id, Request $request) {
-    $data = $request->validate([
-        'title' => 'required|max:255', // add validation for the title
-        'description' => 'required', // add validation for the description
-        'long_description' => 'required' // add validation for the long description
-    ]);
-
-    $task = Task::findOrFail($id); // find the task by id
-    $task->title = $data['title']; // update the title
-    $task->description = $data['description']; // update the description
-    $task->long_description = $data['long_description']; // update the long description
-    $task->save();
-
-    return redirect()->route('tasks.show', ['id' => $task->id])
-        ->with('success', 'Task updated successfully!'); // redirect to the show page with a success message
-})->name('tasks.update'); // name the route
-
-
+// Route::get('/xxx', function () {
+//     return 'Hello';
+// })->name('hello');
+// Route::get('/hallo', function () {
+//     return redirect()->route('hello');
+// });
+// Route::get('/greet/{name}', function ($name) {
+//     return 'Hello ' . $name . '!';
+// });
+Route::fallback(function () {
+    return 'Still got somewhere!';
+});
