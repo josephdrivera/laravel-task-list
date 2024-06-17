@@ -1,0 +1,39 @@
+# System files
+/.phpunit.cache
+/.fleet
+
+# IDE files
+/.idea
+/.vscode
+
+# Dependency directories
+/node_modules
+/vendor
+
+# Build files
+/public/build
+/public/hot
+
+# Storage files
+/public/storage
+/storage/*.key
+
+# Environment files
+.env
+.env.backup
+.env.production
+.env.local
+.env.development
+.env.test
+.env.example
+
+# Configuration files
+.phpactor.json
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+
+# Log files
+npm-debug.log
+yarn-error.log
