@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', function () {
     return redirect()->route('tasks.index');
-});
+}); // redirect to the index page
 
 Route::get('/tasks', function () {
     return view('index', [
         'tasks' => Task::latest()->get()
-    ]);
+    ]); // return the tasks in the latest order
 })->name('tasks.index');
 
 Route::view('/tasks/create', 'create')
@@ -40,6 +40,7 @@ Route::get('/tasks/{id}', function ($id) {
     ]);
 })->name('tasks.show');
 
+//
 Route::post('/tasks', function (Request $request) {
     $data = $request->validate([
         'title' => 'required|max:255',
@@ -54,22 +55,24 @@ Route::post('/tasks', function (Request $request) {
     $task->save();
 
     return redirect()->route('tasks.show', ['id' => $task->id])
-        ->with('success', 'Task created successfully!');
-})->name('tasks.store');
+        ->with('success', 'Task created successfully!'); // redirect to the show page with a success message
+})->name('tasks.store'); // name the route
 
 Route::put('/tasks/{id}', function ($id, Request $request) {
     $data = $request->validate([
-        'title' => 'required|max:255',
-        'description' => 'required',
-        'long_description' => 'required'
+        'title' => 'required|max:255', // add validation for the title
+        'description' => 'required', // add validation for the description
+        'long_description' => 'required' // add validation for the long description
     ]);
 
-    $task = Task::findOrFail($id);
-    $task->title = $data['title'];
-    $task->description = $data['description'];
-    $task->long_description = $data['long_description'];
+    $task = Task::findOrFail($id); // find the task by id
+    $task->title = $data['title']; // update the title
+    $task->description = $data['description']; // update the description
+    $task->long_description = $data['long_description']; // update the long description
     $task->save();
 
     return redirect()->route('tasks.show', ['id' => $task->id])
-        ->with('success', 'Task updated successfully!');
-})->name('tasks.update');
+        ->with('success', 'Task updated successfully!'); // redirect to the show page with a success message
+})->name('tasks.update'); // name the route
+
+
